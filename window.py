@@ -1,4 +1,4 @@
-import base_datos
+from base_datos import BaseDatos 
 import sys
 from PyQt6.QtWidgets import QApplication ,QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox
 from PyQt6.QtCore import Qt
@@ -104,18 +104,22 @@ class Window:
         self.window1.show()
 
     def verificacion(self):
-        if self.ingreso_text_Id.text() == "admin" and self.ingreso_text_password.text() == "admin":
+        user = self.ingreso_text_Id.text()
+        password = self.ingreso_text_password.text()
+        try:
+            self.base_datos = BaseDatos(user, password)
             self.window1.close()
             self.Ingreso_de_datos()
-        else:
-            QMessageBox.warning(self.window, "Error", "Usuario o contraseña incorrectos")
-
+        except:
+            QMessageBox.warning(self.window1, "Error", "Usuario o contraseña incorrectos")
+            return
+    
     def guardar(self): #se sacan los datos de cada campo, se envia a la base de datos y se limpian los campos
         nombre = self.nombre_text.text()
         precio = self.price_text.text()
         descripcion = self.description_text.text()
 
-        base_datos.ejemplo_obtencion_datos(nombre, precio, descripcion)
+        self.base_datos.agregar(nombre, int(precio), descripcion)
 
         #base_datos.agregar(nombre, precio, descripcion) esta es la funcion real para fguardar los datos
 
